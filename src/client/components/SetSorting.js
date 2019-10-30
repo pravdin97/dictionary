@@ -1,12 +1,15 @@
 // @flow
 
-import React from 'react'
+import React from 'react';
+import { connect } from 'react-redux';
 
-type Props = {
-    setSorting: (filter: string) => void
+type DispatchProps = {
+    +setSorting: (filter: string) => void
 };
 
-export default function SetSorting ({setSorting}: Props) {
+type Props = DispatchProps;
+
+function SetSorting ({setSorting}: Props) {
     return <div className="container">
         <div className="row">
             <div className="col-4 p-2"> По-английски 
@@ -21,3 +24,19 @@ export default function SetSorting ({setSorting}: Props) {
         </div>
     </div>
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSorting: (filter: string): void => {
+            dispatch({
+                type: 'SET_SORTING',
+                filter: filter,
+            })
+        }
+    }
+}
+
+export default connect(
+    null,
+    mapDispatchToProps,
+)(SetSorting);

@@ -1,14 +1,15 @@
 // @flow
 
-import React from 'react'
-import type {Word} from '../Types.js'
+import React from 'react';
+import type {Word} from '../Types.js';
+import { connect } from 'react-redux';
 
 type Props = {
     +pair: Word,
-    +onDelete: (id: string) => void
+    +onDelete: any,
 };
 
-export default function Pair({pair, onDelete}: Props) {
+function Pair({ pair, onDelete }: Props) {
     return (
         <div className="row">
             <div className="col-4 border">
@@ -23,4 +24,6 @@ export default function Pair({pair, onDelete}: Props) {
         </div>
 
     )
-}
+};
+
+export default Pair;

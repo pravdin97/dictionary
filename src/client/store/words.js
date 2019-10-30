@@ -1,14 +1,9 @@
 // @flow
 
 import uuid from 'uuidv4';
+import type { Word, Words } from '../Types';
 
-type Word = {
-    +id: string,
-    +russian: string,
-    +english: string,
-};
-
-type State = $ReadOnlyArray<Word>;
+type State = Words;
 
 type ActionAdd = {
     +type: 'ADD_PAIR',

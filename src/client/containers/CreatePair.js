@@ -1,17 +1,20 @@
 // @flow
 
-import React from 'react'
+import React from 'react';
+import { connect } from 'react-redux';
 
-type Props = {
+type DispatchProps = {
     onAddingPair(russian: string, english: string): void,
 };
+
+type Props = DispatchProps;
 
 type State = {|
     +russian: string,
     +english: string,
 |};
 
-export default class CreatePair extends React.Component<Props, State> {
+class CreatePair extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         
@@ -67,4 +70,22 @@ export default class CreatePair extends React.Component<Props, State> {
             </div>
         </form>
     }
-}
+};
+
+const mapDispatchToProps = (dispatch): DispatchProps => {
+    return {
+        onAddingPair: (russian: string, english: string): void => {
+            // throw new Error(`Caboom! (${russian}/${english})`)
+            dispatch({
+                type: 'ADD_PAIR',
+                russian: russian,
+                english: english,
+            });
+        }
+    }
+};
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(CreatePair);

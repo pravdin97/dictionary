@@ -19,7 +19,8 @@
     "start": "node build/app.js",
     "babel": "rm -rf build && babel src/server --out-dir build",
     "webpack": "rm -rf public/js && webpack --config webpack.config.js ",
-    "build": "yarn run babel && yarn run webpack"
+    "build": "yarn run babel && yarn run webpack",
+    "build-watch": "webpack -w"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -31,6 +32,7 @@
     "@babel/preset-react": "^7.6.3",
     "babel-loader": "^8.0.6",
     "flow-bin": "^0.110.1",
+    "source-map-loader": "^0.2.4",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9"
   }
