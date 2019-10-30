@@ -16,9 +16,10 @@
     "uuidv4": "^5.0.1"
   },
   "scripts": {
-    "start": "node build/server/app.js",
-    "babel": "rm -rf build && babel src --out-dir build",
-    "webpack": "rm -rf public/js && webpack --config webpack.config.js "
+    "start": "node build/app.js",
+    "babel": "rm -rf build && babel src/server --out-dir build",
+    "webpack": "rm -rf public/js && webpack --config webpack.config.js ",
+    "build": "yarn run babel && yarn run webpack"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.4",
@@ -26,7 +27,10 @@
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.6.3",
+    "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.6.3",
+    "babel-loader": "^8.0.6",
+    "flow-bin": "^0.110.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9"
   }

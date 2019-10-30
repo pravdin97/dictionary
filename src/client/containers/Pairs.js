@@ -1,7 +1,15 @@
+// @flow
+
 import React from 'react'
 import Pair from '../components/Pair';
+import type {Words} from '../Types'
 
-export default class Pairs extends React.Component {
+type Props = {
+    +pairs: Words,
+    +onDelete: (string) => void,
+};
+
+export default class Pairs extends React.Component<Props> {
     render() {
         const { pairs, onDelete } = this.props
         return(

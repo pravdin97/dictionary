@@ -1,6 +1,14 @@
-import React from 'react'
+// @flow
 
-export default function Pair({pair, onDelete}) {
+import React from 'react'
+import type {Word} from '../Types.js'
+
+type Props = {
+    +pair: Word,
+    +onDelete: (id: string) => void
+};
+
+export default function Pair({pair, onDelete}: Props) {
     return (
         <div className="row">
             <div className="col-4 border">

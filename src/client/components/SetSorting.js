@@ -1,6 +1,12 @@
+// @flow
+
 import React from 'react'
 
-export default function SetSorting ({setSorting}) {
+type Props = {
+    setSorting: (filter: string) => void
+};
+
+export default function SetSorting ({setSorting}: Props) {
     return <div className="container">
         <div className="row">
             <div className="col-4 p-2"> По-английски 

@@ -1,3 +1,5 @@
+// @flow
+
 import words from './words';
 import filter from './filter';
 
