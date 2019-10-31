@@ -7,6 +7,7 @@ type State = Words;
 
 type ActionAdd = {
     +type: 'ADD_PAIR',
+    +id: string,
     +russian: string,
     +english: string,
 };
@@ -16,17 +17,14 @@ type ActionRemove = {
     +id: string,
 };
 
-const initialState: State = [{
-    id: uuid(),
-    russian: 'собака',
-    english: 'dog',
-},{
-    id: uuid(),
-    russian: 'кошка',
-    english: 'cat',
-}];
+type ActionFill = {
+    +type: 'FILL_PAIRS',
+    +words: Words
+}
 
-type Action = ActionAdd | ActionRemove;
+const initialState: State = [];
+
+type Action = ActionAdd | ActionRemove | ActionFill;
 
 export default function (state: State = initialState, action: Action): State {
     switch(action.type) {
@@ -34,15 +32,21 @@ export default function (state: State = initialState, action: Action): State {
             (action: ActionAdd);
 
             return [...state, {
-                id: uuid(),
+                id: action.id,
                 russian: action.russian.toLowerCase(),
                 english: action.english.toLowerCase(),
-            }]
+            }];
 
         case 'REMOVE_PAIR':
             (action: ActionRemove);
             
-            return state.filter(pair => pair.id !== action.id)
+            return state.filter(pair => pair.id !== action.id);
+        
+        case 'FILL_PAIRS':
+            (action: ActionFill);
+
+            return action.words;
+
         default: 
             return state
     }

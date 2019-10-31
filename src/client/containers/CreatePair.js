@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
+import { addWordPair } from '../store/action';
 
 type DispatchProps = {
     onAddingPair(russian: string, english: string): void,
@@ -76,11 +77,7 @@ const mapDispatchToProps = (dispatch): DispatchProps => {
     return {
         onAddingPair: (russian: string, english: string): void => {
             // throw new Error(`Caboom! (${russian}/${english})`)
-            dispatch({
-                type: 'ADD_PAIR',
-                russian: russian,
-                english: english,
-            });
+            dispatch(addWordPair(russian, english));
         }
     }
 };

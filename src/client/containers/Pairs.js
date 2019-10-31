@@ -4,13 +4,15 @@ import React from 'react';
 import Pair from '../components/Pair';
 import type { Words, Filter } from '../Types';
 import { connect } from 'react-redux';
+import { getWordPairs, deleteWordPair } from '../store/action';
 
 type StateProps = {
     +pairs: Words,
 };
 
 type DispatchProps = {
-    +onDelete: (string) => void
+    +onDelete: (string) => void,
+    +onStart: () => Words
 }
 
 type Props = StateProps & DispatchProps;
@@ -57,19 +59,24 @@ function sortPairs(words: Words, filter: Filter): Words {
 };
 
 class Pairs extends React.Component<Props> {
-    render() {
-        const { pairs, onDelete } = this.props;
-        return(
-            <div className="container mx-auto">
-                {!pairs.length ?
-                    <div>Слов пока нет :(</div> :
-                    pairs.map(p => 
-                        <Pair key={p.id} pair={p} onDelete={onDelete}/>
-                    )
-                }
-            </div>
-        )
-    }
+
+  componentDidMount() {
+    this.props.onStart();
+  };
+
+  render() {
+      const { pairs, onDelete } = this.props;
+      return(
+          <div className="container mx-auto">
+              {!pairs.length ?
+                  <div>Слов пока нет :(</div> :
+                  pairs.map(p => 
+                      <Pair key={p.id} pair={p} onDelete={onDelete}/>
+                  )
+              }
+          </div>
+      )
+  };
 };
 
 const mapStateToProps = ({ words, filter }): StateProps => {
@@ -81,10 +88,10 @@ const mapStateToProps = ({ words, filter }): StateProps => {
 const mapDispatchToProps = (dispatch): DispatchProps => {
     return {
         onDelete: (id: string): void => {
-            dispatch({
-                type: 'REMOVE_PAIR',
-                id: id,
-            });
+            dispatch(deleteWordPair(id));
+        },
+        onStart: (): Words => {
+          dispatch(getWordPairs());
         }
     }
 }

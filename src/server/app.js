@@ -63,17 +63,31 @@ app.get('/getPairs', (req, res) => {
 app.get('/deletePair', (req, res) => {
     const id: ?string = req.query.id;
 
+    const ERRORID = -1;
+
     if (id) {
         const removingWord = findById(id);
         
         if (removingWord) {
             const result = removePair(removingWord);
-            result ? res.send({message: 'word pair has deleted'}) : 
-                res.send({error: 'error while deleting'});
+            result ? res.send({
+                message: 'word pair has deleted',
+                id: id
+            }) : 
+                res.send({
+                    error: 'error while deleting',
+                    id: ERRORID
+                });
         }
-        else res.send({error: 'there are no this word'})
+        else res.send({
+            error: 'there are no this word pair',
+            id: ERRORID
+        });
     }
-    else res.send({error: 'invalid params'})
+    else res.send({
+        error: 'invalid params',
+        id: ERRORID
+    });
 });
 
 app.listen(port, () => console.log('Server started on port ' + port))
