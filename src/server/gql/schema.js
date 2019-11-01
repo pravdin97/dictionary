@@ -18,6 +18,10 @@ type AddingArguments = {
 	}
 }
 
+type DeletingArguments = {
+	id: string
+}
+
 export const schema = buildSchema(`
 	type WordPair {
 		id: String!
@@ -37,6 +41,7 @@ export const schema = buildSchema(`
 
 	type Mutation {
 		addPair(input: WordPairInput): WordPair
+		deletePair(id: String!): String
 	}
 `);
 
@@ -60,5 +65,19 @@ export const root = {
 			}
 		}
 		return null;
-	}
+	},
+	deletePair: ({id}: DeletingArguments) => {
+		const ERRORID = -1;
+
+    if (id) {
+        const removingWord = findById(id);
+
+        if (removingWord) {
+            const result = removePair(removingWord);
+						if (result)
+							return id;
+        }
+		}
+		return null;
+	},
 };
