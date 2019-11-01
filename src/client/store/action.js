@@ -4,53 +4,103 @@ import type { Word, Words } from '../Types.js';
 
 const port: number = 3000;
 const serverURL: string = 'http://localhost:' + port;
+const gqlURL: string = serverURL + '/graphql';
+
+type Query = {
+    query: string,
+    variables: any
+}
+
+const performFetch = (query: Query) => {
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify(query)
+    };
+
+    return fetch(gqlURL, options);
+}
 
 const sendWordPairToServer = (russian: string, english: string): Promise<Word> => {
-    const url = new URL(serverURL + '/addPair');
+    const fields = ['id', 'russian', 'english'];
 
-    const params = {russian: russian, english: english};
+    const query = {
+        query: `
+            mutation($input: WordPairInput) {
+                addPair(input: $input) {
+                    ${fields.join(' ')}
+                }
+            }
+        `,
+        variables: {
+            input: {
+                russian: russian,
+                english: english
+            }
+        }
+    };
 
-    url.search = new URLSearchParams(params).toString();
-    return fetch(url);
+    return performFetch(query);
 };
 
 const getWordPairsFromServer = (): Promise<Words> => {
-    const url = new URL(serverURL + '/getPairs');
+    const fields = ['id', 'russian', 'english'];
+    const query = {
+        query: `{ getPairs { ${fields.join(' ')} } }`
+    };
 
-    return fetch(url);
+    return performFetch(query);
 };
 
 const deleteWordPairFromServer = (id: string): Promise<Word> => {
-    const url = new URL(serverURL + '/deletePair');
 
-    const params = {id: id};
+    const query = {
+        query: `
+            mutation($id: String!) {
+                deletePair(id: $id)
+            }
+        `,
+        variables: {
+            id: id
+        }
+    }
 
-    url.search = new URLSearchParams(params).toString();
-    return fetch(url);
+    return performFetch(query);
 }
 
 const addWordPair = (russian: string, english: string) => async (dispatch: any) => {
-    const response = await sendWordPairToServer(russian, english);
-    const createdPairJson = await response.json();
-    const createdPair = createdPairJson.wordPair;
+    try {
+        const response = await sendWordPairToServer(russian, english);
+        const createdPairJson = await response.json();
+        const createdPair = createdPairJson.data.addPair;
 
-    dispatch({
-        type: 'ADD_PAIR',
-        id: createdPair.id,
-        russian: createdPair.russian,
-        english: createdPair.english,
-    });
+        dispatch({
+            type: 'ADD_PAIR',
+            id: createdPair.id,
+            russian: createdPair.russian,
+            english: createdPair.english,
+        });
+    } catch(e) {
+        console.log(e);
+    }
 };
 
 const getWordPairs = () => async (dispatch: any) => {
-    const response = await getWordPairsFromServer();
-    const allPairsJson = await response.json();
-    const allPairs = allPairsJson.words;
+    try {
+        const response = await getWordPairsFromServer();
+        const allPairsJson = await response.json();
+        const allPairs: Words = allPairsJson.data.getPairs;
 
-    dispatch({
-        type: 'FILL_PAIRS',
-        words: allPairs
-    });
+        dispatch({
+            type: 'FILL_PAIRS',
+            words: allPairs
+        });
+    } catch(e) {
+        console.log(e);
+    }
 };
 
 const deleteWordPair = (id: string) => async (dispatch: any) => {

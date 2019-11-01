@@ -24,7 +24,7 @@ app.use('/static', express.static(publicDirectory));
 app.use('/graphql', graphqlHTTP({
     schema: schema,
     rootValue: root,
-    graphiql: true,
+    graphiql: false,
 }));
 
 app.get('/', (req, res) => {
