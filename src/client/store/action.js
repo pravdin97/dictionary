@@ -7,7 +7,7 @@ const serverURL: string = 'http://localhost:' + port;
 
 const sendWordPairToServer = (russian: string, english: string): Promise<Word> => {
     const url = new URL(serverURL + '/addPair');
-    
+
     const params = {russian: russian, english: english};
 
     url.search = new URLSearchParams(params).toString();

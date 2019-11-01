@@ -1,39 +1,31 @@
 // @flow
 
-import express from 'express'
-import { join } from 'path'
-import WordPair from './models/WordPair'
+import express from 'express';
+import { join } from 'path';
 
-const app = express()
-const port: number = 3000
+import graphqlHTTP from 'express-graphql';
+import { schema, root } from './gql/schema';
 
-const publicDirectory: string = join(__dirname, '../public')
+import WordPair from './models/WordPair';
+import {
+    words,
+    addNewPair,
+    findById,
+    checkIfExist,
+    removePair}
+    from './actions/actions';
 
-let words: $ReadOnlyArray<WordPair> = [];
+const app = express();
+const port: number = 3000;
 
-function addNewPair(word: WordPair): void {
-    words = [...words, word];
-}
+const publicDirectory: string = join(__dirname, '../public');
 
-function findById(id: string): ?WordPair {
-    return words.find(item => item.id === id);
-}
-
-function checkIfExist(russian: string, english: string) {
-    return words.find(item => item.russian === russian && item.english === english)
-}
-
-function removePair(word: WordPair): boolean {
-    const index = words.indexOf(word);
-    if (index < 0)
-        return false;
-    
-    words = [...words.slice(0, index), ...words.slice(index+1)]
-
-    return true;
-}
-
-app.use('/static', express.static(publicDirectory))
+app.use('/static', express.static(publicDirectory));
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+}));
 
 app.get('/', (req, res) => {
     res.sendFile(join(publicDirectory, 'index.html'))
@@ -57,7 +49,7 @@ app.get('/addPair', (req, res) => {
 });
 
 app.get('/getPairs', (req, res) => {
-    res.send({words})
+    res.send({words});
 });
 
 app.get('/deletePair', (req, res) => {
@@ -67,13 +59,13 @@ app.get('/deletePair', (req, res) => {
 
     if (id) {
         const removingWord = findById(id);
-        
+
         if (removingWord) {
             const result = removePair(removingWord);
             result ? res.send({
                 message: 'word pair has deleted',
                 id: id
-            }) : 
+            }) :
                 res.send({
                     error: 'error while deleting',
                     id: ERRORID
@@ -90,4 +82,4 @@ app.get('/deletePair', (req, res) => {
     });
 });
 
-app.listen(port, () => console.log('Server started on port ' + port))
+app.listen(port, () => console.log('Server started on port ' + port));
