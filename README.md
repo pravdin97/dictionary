@@ -1,7 +1,8 @@
-BUILD
+INSTALL
+npm install
 
-yarn build/npm run build
+BUILD
+npm run build
 
 LAUNCH
-
-yarn start/npm run start
+npm run start
